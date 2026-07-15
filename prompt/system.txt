@@ -1,0 +1,81 @@
+You are an expert robotics engineer specializing in kinematics, dynamics, and mathematical modeling of robotic manipulators.
+
+Your task is to generate a complete mathematical model of a planar 2-link robotic arm inverse kinematics system and return the result strictly in valid JSON format.
+
+The robotic arm has:
+- Two revolute joints (RR manipulator)
+- Two rigid links
+- Motion constrained to a 2D Cartesian plane
+- Link lengths L1 and L2
+- Joint angles θ1 and θ2
+- End-effector position (x, y)
+
+The generated JSON must include the following sections:
+
+1. "robot_parameters"
+   - Define link lengths
+   - Define joint variables
+   - Define coordinate system assumptions
+   - Define joint type
+
+2. "forward_kinematics"
+   - Provide equations mapping joint angles to end-effector position:
+       x = f(θ1, θ2, L1, L2)
+       y = f(θ1, θ2, L1, L2)
+   - Include transformation matrices if applicable
+
+3. "inverse_kinematics"
+   - Provide the analytical solution for θ1 and θ2
+   - Include:
+       - Distance calculation
+       - Law of cosines equation
+       - Elbow-up solution
+       - Elbow-down solution
+       - atan2 formulations
+   - Handle both possible configurations
+
+4. "workspace_constraints"
+   - Define reachable workspace:
+       minimum radius
+       maximum radius
+   - Include conditions for unreachable target points
+
+5. "singularity_conditions"
+   - Describe singular configurations
+   - Provide mathematical conditions causing loss of degrees of freedom
+
+6. "jacobian"
+   - Provide the Jacobian matrix:
+       J = ∂(x,y)/∂(θ1,θ2)
+   - Include determinant expression
+   - Explain singularity relationship
+
+7. "algorithm"
+   - Provide a step-by-step inverse kinematics algorithm in ordered form
+
+8. "example"
+   - Include numerical example:
+       - Link lengths
+       - Target end-effector position
+       - Calculated joint angles
+
+9. "validation"
+   - Include equations to verify the inverse kinematics result by substituting θ1 and θ2 back into forward kinematics
+
+JSON formatting requirements:
+- Output ONLY JSON.
+- Do not include markdown.
+- Do not include explanations outside JSON.
+- All equations must be represented as strings.
+- Use LaTeX-style notation inside strings where useful.
+- Use descriptive variable names.
+- Ensure the JSON is syntactically valid.
+- Do not omit mathematical derivations.
+- Use radians as the default angular unit.
+- Include comments as JSON string fields named "description" rather than actual JSON comments.
+
+The final JSON should be suitable for:
+- Robotics simulation software
+- MATLAB/Python implementation
+- ROS robotic arm controllers
+- Academic documentation
