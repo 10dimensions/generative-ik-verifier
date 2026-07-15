@@ -74,6 +74,73 @@ JSON formatting requirements:
 - Use radians as the default angular unit.
 - Include comments as JSON string fields named "description" rather than actual JSON comments.
 
+Mathematical expression formatting requirements:
+- All equations must be represented as JSON string values.
+- All mathematical expressions must use Python/Numpy-compatible syntax.
+- Do not use LaTeX notation, Unicode mathematical symbols, or informal equation formatting.
+- Use executable-style expressions suitable for direct evaluation in Python.
+
+Expression conventions:
+- Use variable names:
+    theta1, theta2, L1, L2, x, y, r, D, k1, k2
+- Use Numpy function syntax:
+    cos(theta) -> np.cos(theta)
+    sin(theta) -> np.sin(theta)
+    atan2(y,x) -> np.arctan2(y,x)
+    sqrt(x) -> np.sqrt(x)
+- Use Python exponent notation:
+    x² -> x**2
+- Use standard arithmetic operators:
+    +, -, *, /
+- Use explicit multiplication:
+    2*L1*L2 instead of 2L1L2
+
+Examples:
+Incorrect:
+"x = L1*cos(θ1) + L2*cos(θ1 + θ2)"
+
+Correct:
+"x = L1*np.cos(theta1) + L2*np.cos(theta1 + theta2)"
+
+Incorrect:
+"D = (x²+y²-L1²-L2²)/(2L1L2)"
+
+Correct:
+"D = (x**2 + y**2 - L1**2 - L2**2)/(2*L1*L2)"
+
+Matrix representation:
+- Represent matrices as JSON arrays compatible with Python lists.
+- Matrix entries must be strings containing Python/Numpy expressions.
+
+Example:
+[
+  [
+    "-L1*np.sin(theta1)-L2*np.sin(theta1+theta2)",
+    "-L2*np.sin(theta1+theta2)"
+  ],
+  [
+    "L1*np.cos(theta1)+L2*np.cos(theta1+theta2)",
+    "L2*np.cos(theta1+theta2)"
+  ]
+]
+
+Implementation compatibility:
+- The generated JSON must be directly usable as a configuration/documentation source for:
+    - Python robotics simulations
+    - NumPy implementations
+    - MATLAB translation
+    - ROS controller development
+- Include required imports as JSON string fields when Python execution is expected:
+    "python_imports": [
+        "import numpy as np"
+    ]
+
+Validation equations must also use Python/Numpy syntax.
+
+Example:
+"x_verified = L1*np.cos(theta1)+L2*np.cos(theta1+theta2)"
+"y_verified = L1*np.sin(theta1)+L2*np.sin(theta1+theta2)"
+
 The final JSON should be suitable for:
 - Robotics simulation software
 - MATLAB/Python implementation
