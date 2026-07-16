@@ -1,0 +1,21 @@
+{
+  "symbols": "l1, l2, m1, m2, g, theta1, theta2, dtheta1, dtheta2, ddtheta1, ddtheta2, I1, I2, lc1, lc2",
+  "forward_kinematics": {
+    "x": "l1*sympy.cos(theta1) + l2*sympy.cos(theta1 + theta2)",
+    "y": "l1*sympy.sin(theta1) + l2*sympy.sin(theta1 + theta2)"
+  },
+  "jacobian": {
+    "linear": "[[-l1*sympy.sin(theta1) - l2*sympy.sin(theta1 + theta2), -l2*sympy.sin(theta1 + theta2)], [l1*sympy.cos(theta1) + l2*sympy.cos(theta1 + theta2), l2*sympy.cos(theta1 + theta2)]]"
+  },
+  "velocities": {
+    "x_dot": "(-l1*sympy.sin(theta1) - l2*sympy.sin(theta1 + theta2))*dtheta1 + (-l2*sympy.sin(theta1 + theta2))*dtheta2",
+    "y_dot": "(l1*sympy.cos(theta1) + l2*sympy.cos(theta1 + theta2))*dtheta1 + (l2*sympy.cos(theta1 + theta2))*dtheta2"
+  },
+  "dynamics": {
+    "M": "[[I1 + I2 + m1*lc1**2 + m2*(l1**2 + lc2**2 + 2*l1*lc2*sympy.cos(theta2)), I2 + m2*(lc2**2 + l1*lc2*sympy.cos(theta2))], [I2 + m2*(lc2**2 + l1*lc2*sympy.cos(theta2)), I2 + m2*lc2**2]]",
+    "C": "[[-m2*l1*lc2*sympy.sin(theta2)*dtheta2, -m2*l1*lc2*sympy.sin(theta2)*(dtheta1 + dtheta2)], [m2*l1*lc2*sympy.sin(theta2)*dtheta1, 0]]",
+    "G": "[[-(m1*lc1 + m2*l1)*g*sympy.sin(theta1) - m2*lc2*g*sympy.sin(theta1 + theta2)], [-m2*lc2*g*sympy.sin(theta1 + theta2)]]",
+    "tau": "sympy.Matrix(M)*sympy.Matrix([[ddtheta1], [ddtheta2]]) + sympy.Matrix([[C[0][0]*dtheta1 + C[0][1]*dtheta2], [C[1][0]*dtheta1 + C[1][1]*dtheta2]]) + sympy.Matrix(G)"
+  },
+  "example_code": "import sympy\nfrom sympy import symbols, Matrix, sin, cos\nl1, l2, m1, m2, g, theta1, theta2, dtheta1, dtheta2, ddtheta1, ddtheta2, I1, I2, lc1, lc2 = symbols('l1 l2 m1 m2 g theta1 theta2 dtheta1 dtheta2 ddtheta1 ddtheta2 I1 I2 lc1 lc2', real=True, positive=True)\n# Substitute example values\nsubs_dict = {l1: 0.5, l2: 0.4, m1: 1.0, m2: 0.8, g: 9.81, lc1: 0.25, lc2: 0.2, I1: 0.1, I2: 0.05}\n# Evaluate e.g. forward kinematics\nx_expr = l1*cos(theta1) + l2*cos(theta1 + theta2)\nprint(x_expr.subs(subs_dict).subs({theta1: 0.5, theta2: 0.3}).evalf())"
+}
