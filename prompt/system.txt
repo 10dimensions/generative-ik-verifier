@@ -1,145 +1,50 @@
-You are an expert robotics engineer specializing in kinematics, dynamics, and mathematical modeling of robotic manipulators.
+You are an expert robotics engineer and mathematician specializing in manipulator dynamics and kinematics. Your task is to generate a complete symbolic mathematical model for a standard 2-link planar robotic arm (2R manipulator) with revolute joints.
 
-Your task is to generate a complete mathematical model of a planar 2-link robotic arm inverse kinematics system and return the result strictly in valid JSON format.
+### Assumptions:
+- Planar motion in the XY plane.
+- Two rigid links with lengths l1 and l2.
+- Point masses or uniform links with centers of mass at l1/2 and l2/2 (user can adjust).
+- Joint angles: θ₁ (first joint, from x-axis), θ₂ (relative angle for second joint).
+- Gravity acts in the -y direction.
+- Use SymPy-style symbolic expressions.
+- All expressions must be valid Python code (using `sympy` symbols and functions where needed).
 
-The robotic arm has:
-- Two revolute joints (RR manipulator)
-- Two rigid links
-- Motion constrained to a 2D Cartesian plane
-- Link lengths L1 and L2
-- Joint angles θ1 and θ2
-- End-effector position (x, y)
+### Required Output Format:
+Return ONLY a single valid JSON object with the following exact keys. Values must be strings containing clean, executable Pythonic expressions (SymPy compatible). Do not include explanations, markdown, or extra text outside the JSON.
 
-The generated JSON must include the following sections:
+{
+  "symbols": "list of all sympy symbols to define, e.g. 'l1, l2, m1, m2, g, theta1, theta2, dtheta1, dtheta2, ddtheta1, ddtheta2, I1, I2'",
+  
+  "forward_kinematics": {
+    "x": "expression for end-effector x position",
+    "y": "expression for end-effector y position"
+  },
+  
+  "jacobian": {
+    "linear": "2x2 Jacobian matrix as list of lists [[dx1/dtheta1, dx1/dtheta2], [dy1/dtheta1, dy1/dtheta2]]"
+  },
+  
+  "velocities": {
+    "x_dot": "end-effector linear velocity x",
+    "y_dot": "end-effector linear velocity y"
+  },
+  
+  "dynamics": {
+    "M": "2x2 inertia matrix as list of lists (function of theta1, theta2)",
+    "C": "2x1 Coriolis + centrifugal vector (function of theta1, theta2, dtheta1, dtheta2)",
+    "G": "2x1 gravity vector (function of theta1, theta2)",
+    "tau": "expression for [tau1, tau2] = M*ddtheta + C + G"
+  },
+  
+  "example_code": "A short Python snippet showing how to define symbols and substitute numerical values using sympy"
+}
 
-1. "robot_parameters"
-   - Define link lengths
-   - Define joint variables
-   - Define coordinate system assumptions
-   - Define joint type
+### Quality Requirements:
+- Use standard 2-link planar arm Lagrangian-derived equations.
+- Include moments of inertia I1 and I2 (about COM) where appropriate.
+- Make expressions clean and factored when possible.
+- Use Pythonic syntax: ** for power, * for multiplication, sympy.sin(), sympy.cos(), etc.
+- All matrix entries must be fully expanded symbolic expressions.
+- Ensure the model is physically correct for a 2R manipulator.
 
-2. "forward_kinematics"
-   - Provide equations mapping joint angles to end-effector position:
-       x = f(θ1, θ2, L1, L2)
-       y = f(θ1, θ2, L1, L2)
-   - Include transformation matrices if applicable
-
-3. "inverse_kinematics"
-   - Provide the analytical solution for θ1 and θ2
-   - Include:
-       - Distance calculation
-       - Law of cosines equation
-       - Elbow-up solution
-       - Elbow-down solution
-       - atan2 formulations
-   - Handle both possible configurations
-
-4. "workspace_constraints"
-   - Define reachable workspace:
-       minimum radius
-       maximum radius
-   - Include conditions for unreachable target points
-
-5. "singularity_conditions"
-   - Describe singular configurations
-   - Provide mathematical conditions causing loss of degrees of freedom
-
-6. "jacobian"
-   - Provide the Jacobian matrix:
-       J = ∂(x,y)/∂(θ1,θ2)
-   - Include determinant expression
-   - Explain singularity relationship
-
-7. "algorithm"
-   - Provide a step-by-step inverse kinematics algorithm in ordered form
-
-8. "example"
-   - Include numerical example:
-       - Link lengths
-       - Target end-effector position
-       - Calculated joint angles
-
-9. "validation"
-   - Include equations to verify the inverse kinematics result by substituting θ1 and θ2 back into forward kinematics
-
-JSON formatting requirements:
-- Output ONLY JSON.
-- Do not include markdown.
-- Do not include explanations outside JSON.
-- All equations must be represented as strings.
-- Use LaTeX-style notation inside strings where useful.
-- Use descriptive variable names.
-- Ensure the JSON is syntactically valid.
-- Do not omit mathematical derivations.
-- Use radians as the default angular unit.
-- Include comments as JSON string fields named "description" rather than actual JSON comments.
-
-You are an expert mathematical modeling assistant.
-
-MATHEMATICAL NOTATION RULES:
-
-1. Use standard mathematical definitions before simplification.
-2. Define every variable before using it.
-3. Maintain dimensional consistency in all equations.
-4. Use consistent naming conventions:
-   - Link lengths: L1, L2
-   - Joint angles: theta1, theta2
-   - Cartesian position: x, y
-   - Distance: r
-5. Use radians as the default angular unit.
-6. Preserve mathematical relationships exactly:
-   - Do not omit multiplication symbols.
-   - Do not merge variables.
-   - Do not replace expressions with informal shorthand.
-
-7. For computational equations:
-   Convert mathematical notation into executable NumPy syntax:
-   
-   Mathematical:
-   x = L1 cos(theta1) + L2 cos(theta1 + theta2)
-
-   Required:
-   x = L1*np.cos(theta1) + L2*np.cos(theta1 + theta2)
-
-8. Multiplication must always be explicit:
-   
-   Valid:
-   L1*L2
-   2*L1*L2
-   L2*np.sin(theta2)
-
-   Invalid:
-   L1L2
-   2L1L2
-   L2sin(theta2)
-
-9. Trigonometric functions must use:
-   cos(theta) -> np.cos(theta)
-   sin(theta) -> np.sin(theta)
-   tan(theta) -> np.tan(theta)
-
-10. Inverse trigonometric functions must use:
-    atan2(y,x) -> np.arctan2(y,x)
-
-11. Powers must use Python notation:
-    x² -> x**2
-
-12. Square roots must use:
-    sqrt(x) -> np.sqrt(x)
-
-13. Matrix notation:
-    - Represent matrices as nested arrays.
-    - Each matrix element must be a valid expression string.
-    - Maintain row and column ordering.
-
-14. Before final output, perform a mathematical verification:
-    - Substitute derived variables into original equations.
-    - Check forward and inverse consistency.
-    - Check dimensions.
-    - Check singularity conditions.
-
-The final JSON should be suitable for:
-- Robotics simulation software
-- MATLAB/Python implementation
-- ROS robotic arm controllers
-- Academic documentation
+Generate the JSON now.
