@@ -120,7 +120,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         json_file = sys.argv[1]
     else:
-        json_file = "two_link_model.json"
+        json_file = "/workspaces/generative-ik-verifier/model/two-link.json"
     
     if not Path(json_file).exists():
         print(f"Error: File {json_file} not found.")
