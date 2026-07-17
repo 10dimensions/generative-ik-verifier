@@ -17,13 +17,13 @@ The workflow consists of three main steps:
    - Dynamic model: Inertia matrix `M`, Coriolis/centrifugal `C`, Gravity `G`, and torque `τ`
 
 3. **Python Parser → Lean 4**  
-   A Python script reads the JSON file and automatically translates the mathematical expressions into a valid **Lean 4** file (`TwoLinkArm.lean`) using Mathlib.
+   A Python script reads the JSON file and automatically translates the mathematical expressions into a valid **Lean 4** file (`IKLean.lean`) using Mathlib.
 
 ## Files
 
-- `two_link_model.json` — Symbolic model (SymPy expressions)
-- `generate_lean.py` — Parser that converts JSON → Lean 4 code
-- `TwoLinkArm.lean` — Generated Lean 4 formalization
+- `model/two-link.json` — Symbolic model (SymPy expressions)
+- `parser.py` — Parser that converts JSON → Lean 4 code
+- `ik-lean/IkLean.lean` — Generated Lean 4 formalization
 
 ## Purpose
 
@@ -42,4 +42,4 @@ The Lean 4 code allows formal verification of the robotic arm model, including:
 
 1. Run the Python script with the JSON model:
    ```bash
-   python generate_lean.py
+   python parser.py

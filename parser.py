@@ -38,7 +38,7 @@ def sympy_to_lean(expr: str) -> str:
     return lean_expr.strip()
 
 
-def generate_lean_parser(json_path: str, output_path: str = "TwoLinkArm.lean"):
+def generate_lean_parser(json_path: str, output_path: str = "IkLean.lean"):
     with open(json_path, 'r', encoding='utf-8') as f:
         model = json.load(f)
 
