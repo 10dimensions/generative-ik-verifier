@@ -1,4 +1,3 @@
-import IkLean.Basic
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.Calculus.Deriv.Basic
 
